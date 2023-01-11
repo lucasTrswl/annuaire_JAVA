@@ -1,15 +1,15 @@
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.ConcurrentModificationException;
 import java.util.Scanner;
+import java.io.File;
 
 import model.Contact;
 
 public class App {
 
     private static Scanner _scan = new Scanner(System.in);
-    private static ArrayList<Contact> menus;
 
     public static void main(String[] args) throws Exception {
 
@@ -24,19 +24,125 @@ public class App {
                     listerContacts();
                     break;
                 case "3":
+                    modifierContact();
+                    break;
+                case "4":
                     supprimerContact();
                     break;
                 case "q":
                     return;
                 default:
-                    System.out.println("Veuillez sélectionner parmi les choix disponibles !!!");
+                    System.out.println("Boulet !!!");
                     break;
             }
         }
     }
 
 
+    private static void supprimerContact() {
+        ArrayList<Contact> list;
+        try {
+            list = Contact.lister();
+            System.out.println("Saisir le nom ou prénom du contact à supprimer :");
+            String nom = _scan.nextLine();
+            try {
+                for (Contact contact : list) {
+                    if(contact.getNom().equals(nom) || contact.getPrenom().equals(nom)){
+                        int index = list.indexOf(contact);
+                        list.remove(index);
+                    }
+                }
+            } catch (ConcurrentModificationException e) {
+
+            }
+            System.out.println(nom + " à été supprimé.");
+            File file = new File("contacts.csv");
         
+            file.delete();
+            file.createNewFile();
+            for (Contact contact : list) {
+                contact.supprimer(file);
+
+            }
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void modifierContact() {
+        System.out.println("Saisir le nom du contact que vous souhaitez modifier: ");
+        String nm = _scan.nextLine();
+        try {
+            ArrayList<Contact> list = Contact.lister();
+            for (Contact contact : list) {
+                if(nm.equals(contact.getNom()) || nm.equals(contact.getPrenom()) || nm.equals(contact.getPrenom() + " " + contact.getNom())){
+                    System.out.println("Vous avez choisi " + contact.getPrenom() + " " + contact.getNom());
+                    System.out.println("Quel élément voulez-vous modifier?");
+                    System.out.println("-Nom- -Prenom- -Mail- -Telephone- -Date-");
+                    String ch = _scan.nextLine();
+                    switch (ch) {
+                        case "Nom":
+                            System.out.println("Veuillez saisir le nouveau Nom: ");
+                            String cho = _scan.nextLine();
+                            contact.setNom(cho);
+                            break;
+                        case "Prenom":
+                            System.out.println("Veuillez saisir le nouveau prénom: ");
+                            String cho1 = _scan.nextLine();
+                            contact.setPrenom(cho1);
+                            break;
+                        case "Mail":
+                            System.out.println("Veuillez saisir la nouvelle adresse-email: ");
+                            String cho2 = _scan.nextLine();
+                            contact.setMail(cho2);
+                            break;
+                        case "Telephone":
+                            System.out.println("Veuillez saisir le nouveau numéro de téléphone: ");
+                            String cho3 = _scan.nextLine();
+                            contact.setTelephone(cho3);
+                            break;
+                        case "Date":
+                            System.out.println("Veuillez saisir la nouvelle date de naissance: ");
+                            String cho4 = _scan.nextLine();
+                            contact.setDateNaissance(cho4);
+                            break;
+                        default:
+                            System.out.println("Veuillez choisir une option valide.");
+                            break;
+                    }
+                }
+            }
+            File file = new File("contacts.csv");
+    
+            file.delete();
+            file.createNewFile();
+            for (Contact contact : list) {
+                contact.supprimer(file);
+            }
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Une erreur est survenue lors de l'obtention des contacts.");        
+        } catch (ParseException e2) {
+            e2.printStackTrace();
+            System.out.println("Une erreur est survenue lors de l'obtention des contacts");
+        }
+    }
+
+    private static void listerContacts() {
+        try {
+            ArrayList<Contact> list = Contact.lister();
+            for (Contact contact : list) {
+                System.out.println(contact.getNom() + " " + contact.getPrenom());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Une erreur est survenue lors de l'obtention des contacts.");        
+        } catch (ParseException e2) {
+            System.out.println("Une erreur est survenue lors de l'obtention des contacts");
+        }
+    }
+
     private static void ajouterContact() throws IOException {
         Contact c = new Contact();
         System.out.println("Saisir le nom");
@@ -61,7 +167,7 @@ public class App {
                 c.setTelephone(_scan.nextLine());
                 break;
             } catch (ParseException e) {
-                System.out.println("Format de téléphone incorrect!");
+                System.out.println("Mauvais téléphone!");
             }
         }
 
@@ -71,50 +177,23 @@ public class App {
                 c.setDateNaissance(_scan.nextLine());
                 break;
             } catch (ParseException e) {
-                System.out.println("Date de naissance doit être dd/MM/yyyy");
+                System.out.println("Mauvaise date de naissance!");
             }
         }
         c.enregistrer();
         System.out.println("Contact enregistré");
-
-
-
     }
-
-
-    private static void listerContacts() {
-        Contact c = new Contact();
-        ArrayList<Contact> list = c.lister();
-        for (Contact contact : list) {
-            System.out.println(contact.getNom() + "; " + contact.getPrenom() + "; " + contact.getMail() + "; " + contact.getTelephone() + "; " + contact.getDateNaissance());
-        }
-    }
-
-    private static ArrayList<Contact> contacts = new ArrayList<Contact>();
-
-
-    private static void supprimerContact() throws IOException{
-        Contact c = new Contact();
-        ArrayList<Contact> list = c.lister();
-        System.out.println("Saisir l'indice du contact à supprimer :");
-        int index = _scan.nextInt();
-        list.remove(index);
-
-    }
-
 
     private static void afficherMenu() {
         ArrayList<String> menus = new ArrayList<>();
         menus.add("-- MENU --");
         menus.add("1- Ajouter un contact");
         menus.add("2- Lister les contacts");
-        menus.add("3- Supprimer un contact");
+        menus.add("3- Modifier un contact");
+        menus.add("4- Supprimer un contact");
         menus.add("q- Quitter");
         for (String menu : menus) {
             System.out.println(menu);
         }
     }
-
-
- 
 }

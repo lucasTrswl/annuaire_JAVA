@@ -1,17 +1,18 @@
 package model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -80,7 +81,6 @@ public class Contact {
         this.dateNaissance = format.parse(dateNaissance);
     }
 
-    //méthode pour enregistrer un contact dans le fichier csv
     public void enregistrer() throws IOException {
         PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("contacts.csv", true)));
         try {
@@ -90,32 +90,37 @@ public class Contact {
         }
     }
 
-    // fonction pour lister les contacts enregistrés dans le fichier csv
-    public ArrayList<Contact> lister() {
-        ArrayList<Contact> list = new ArrayList<>();
-        // TODO: récupérer les contacts dans le fichier et les ajouter à la liste.
-
+    public void supprimer(File file) throws IOException {
+        PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
         try {
-            FileInputStream fstream = new FileInputStream("contacts.csv");
-            BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-            String strLine;
-            while ((strLine = br.readLine()) != null) {
-                String[] fields = strLine.split(SEPARATEUR);
-                Contact contact = new Contact();
-                contact.setNom(fields[0]);
-                contact.setPrenom(fields[1]);
-                contact.setMail(fields[2]);
-                contact.setTelephone(fields[3]);
-                contact.setDateNaissance(fields[4]);
-                //and so on
-                list.add(contact);
-            }
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+            pw.println(this.toString());
+        } finally {
+            pw.close();
         }
+    }
+
+    public static ArrayList<Contact> lister() throws IOException, ParseException  {
+        ArrayList<Contact> list = new ArrayList<>();
+
+        File file = new File("contacts.csv");
+
+        BufferedReader br
+        = new BufferedReader(new FileReader(file));
+        
+        String st;
+
+        while ((st = br.readLine()) != null){
+            Contact c = new Contact();
+            String split[] = st.split(";");
+            c.setNom(split[0]);
+            c.setPrenom(split[1]);
+            c.setMail(split[2]);
+            c.setTelephone(split[3]);
+            c.setDateNaissance(split[4]);
+            list.add(c);
+        }
+        br.close();
+
         return list;
     }
 
@@ -132,17 +137,6 @@ public class Contact {
         build.append(SEPARATEUR);
         build.append(this.getDateNaissance());
         return build.toString();
-    }
-
-    public static void clear() {
-    }
-
-    public static Iterator<Contact> iterator() {
-        return null;
-    }
-
-    public int getId() {
-        return 0;
     }
 
 }
