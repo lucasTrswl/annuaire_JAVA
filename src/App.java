@@ -149,21 +149,32 @@ public class App {
                     case "Noms":
                         nameListing();
                 }
+                break;
             case "n":
                 normalListing();
+                break;
+        }
+
+
+        System.out.println("Souhaitez vous rechercher un contact en particulier? (y/n)");
+        String yesno2 = _scan.nextLine();
+        switch(yesno2){
+            case "y":
+                System.out.println("Entrez le nom du contact à rechercher");
+                String nom = _scan.nextLine();
+                ArrayList<Contact> list = Contact.lister();
+                for (Contact contact : list) {
+                    if(nom.equals(contact.getNom()) || nom.equals(contact.getPrenom()) || nom.equals(contact.getPrenom() + " " + contact.getNom())){
+                        System.out.println(contact.getNom() + " " + contact.getPrenom());
+                    }
+                }
+
         }
     }
 
     private static void normalListing() throws IOException, ParseException{
             ArrayList<Contact> list = Contact.lister();
-            ArrayList<String> namesList = new ArrayList<String>();
 
-            for (Contact contact : list) {
-                namesList.add((contact.getNom() + " " + contact.getPrenom()));
-            }
-
-            Collections.sort(namesList);
-            System.out.println(namesList);
             for (Contact contact : list) {
                 System.out.println(contact.getNom() + " " + contact.getPrenom());
             }
@@ -176,7 +187,6 @@ public class App {
         for (Contact contact : list) {
             comparableNames.add(new ComparableName(contact.getNom(), contact.getPrenom()));
         }
-
         Collections.sort(comparableNames);
 
         for (ComparableName name : comparableNames) {
