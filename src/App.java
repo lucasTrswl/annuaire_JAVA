@@ -71,7 +71,7 @@ public class App {
     }
 
     private static void modifierContact() {
-        System.out.println("Saisir le nom du contact que vous souhaitez modifier: ");
+        System.out.println("Saisirrrrrrrrr le nom du contact que vous souhaitez modifier: ");
         String nm = _scan.nextLine();
         try {
             ArrayList<Contact> list = Contact.lister();
