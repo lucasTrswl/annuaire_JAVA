@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import model.Contact;
+import model.DateComparator;
+import model.Date;
 import model.ComparableName;
 
 public class App {
@@ -153,6 +155,9 @@ public class App {
                 switch(choix){
                     case "Noms":
                         nameListing();
+                    case "Dates":
+                        dateListing();
+                    
                 }
                 break;
             case "n":
@@ -176,7 +181,7 @@ public class App {
 
         }
     }
-    }
+    
 
     private static void normalListing() throws IOException, ParseException{
             ArrayList<Contact> list = Contact.lister();
@@ -198,6 +203,37 @@ public class App {
         for (ComparableName name : comparableNames) {
             System.out.println(name.getNom() + " " + name.getPrenom());
         }
+    }
+
+    private static void dateListing() throws IOException, ParseException{
+        ArrayList<Contact> list = Contact.lister();
+        ArrayList<Date> comparableDates = new ArrayList<>();
+        
+        for (Contact contact : list) {
+            ArrayList<Integer> dateNumbers = dateSeparator(contact.getDateNaissance());
+            comparableDates.add(new Date(dateNumbers.get(0), dateNumbers.get(1), dateNumbers.get(2)));
+        }
+
+        Collections.sort(comparableDates, new DateComparator());
+
+        for (Date date : comparableDates) {
+            System.out.println(date);
+        }
+    }
+
+    private static ArrayList<Integer> dateSeparator(String date){
+        String split[] = date.split("/");
+        String a = split[2];
+        String m = split[1];
+        String j = split[0];
+        int annee = Integer.parseInt(a);
+        int mois = Integer.parseInt(m);
+        int jour = Integer.parseInt(j);
+        ArrayList<Integer> dateInts = new ArrayList<>();
+        dateInts.add(annee);
+        dateInts.add(mois);
+        dateInts.add(jour);
+        return dateInts;
     }
 
     private static void ajouterContact() throws IOException {
