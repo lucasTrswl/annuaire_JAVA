@@ -56,7 +56,6 @@ public class App {
         }
     }
 
-
     private static void supprimerContact() {
         ArrayList<Contact> list;
         try {
@@ -154,10 +153,12 @@ public class App {
                 switch(choix){
                     case "Noms":
                         nameListing();
-                }
-            case "n":
-                normalListing();
+                        break;
+                    case "Emails":
+                        sortByEmail();
+                        break;
         }
+    }
     }
 
     private static void normalListing() throws IOException, ParseException{
@@ -168,13 +169,13 @@ public class App {
             ArrayList<String> namesList = new ArrayList<String>();
 
             for (Contact contact : list) {
-                namesList.add((contact.getNom() + " " + contact.getPrenom()));
+                namesList.add((contact.getNom() + " " + contact.getPrenom() + " " + contact.getMail() + " " + contact.getTelephone() + " " + contact.getDateNaissance()));
             }
 
             Collections.sort(namesList);
             System.out.println(namesList);
             for (Contact contact : list) {
-                System.out.println(contact.getNom() + " " + contact.getPrenom());
+                System.out.println(contact.getNom() + " " + contact.getPrenom() + " " + contact.getMail() + " " + contact.getTelephone() + " " + contact.getDateNaissance());
             }
     }
 
