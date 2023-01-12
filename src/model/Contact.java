@@ -138,6 +138,4 @@ public class Contact {
         build.append(this.getDateNaissance());
         return build.toString();
     }
-    
-
 }

@@ -7,22 +7,33 @@ import java.io.File;
 import java.util.Collections;
 
 import model.Contact;
+import model.ComparableName;
 
 public class App {
 
     private static Scanner _scan = new Scanner(System.in);
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         while (true) {
             afficherMenu();
             String choix = _scan.nextLine();
             switch (choix) {
                 case "1":
-                    ajouterContact();
+                    try {
+                        ajouterContact();
+                    } catch (IOException e1) {
+                        System.out.println("Une erreur est survenue lors de l'ajout du contact.");        
+                        e1.printStackTrace();
+                    }
                     break;
                 case "2":
-                    listerContacts();
+                    try {
+                        listerContacts();
+                    } catch (IOException | ParseException e) {
+                        System.out.println("Une erreur est survenue lors de l'obtention des contacts.");        
+                        e.printStackTrace();
+                    }
                     break;
                 case "3":
                     modifierContact();
@@ -124,8 +135,26 @@ public class App {
         }
     }
 
-    private static void listerContacts() {
-        try {
+    private static void listerContacts() throws IOException, ParseException {
+        System.out.println("Souhaitez vous trier la liste? (y/n)");
+        String yesno = _scan.nextLine();
+        switch(yesno){
+            case "y":
+                System.out.println("Quelle méthode de tri voulez-vous utiliser?");
+                System.out.println("--Noms--");
+                System.out.println("--Emails--");
+                System.out.println("--Dates--");
+                String choix = _scan.nextLine();
+                switch(choix){
+                    case "Noms":
+                        nameListing();
+                }
+            case "n":
+                normalListing();
+        }
+    }
+
+    private static void normalListing() throws IOException, ParseException{
             ArrayList<Contact> list = Contact.lister();
             ArrayList<String> namesList = new ArrayList<String>();
 
@@ -138,11 +167,20 @@ public class App {
             for (Contact contact : list) {
                 System.out.println(contact.getNom() + " " + contact.getPrenom());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Une erreur est survenue lors de l'obtention des contacts.");        
-        } catch (ParseException e2) {
-            System.out.println("Une erreur est survenue lors de l'obtention des contacts");
+    }
+
+    private static void nameListing() throws IOException, ParseException{
+        ArrayList<Contact> list = Contact.lister();
+        ArrayList<ComparableName> comparableNames = new ArrayList<>();
+        
+        for (Contact contact : list) {
+            comparableNames.add(new ComparableName(contact.getNom(), contact.getPrenom()));
+        }
+
+        Collections.sort(comparableNames);
+
+        for (ComparableName name : comparableNames) {
+            System.out.println(name.getNom() + " " + name.getPrenom());
         }
     }
 
