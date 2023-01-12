@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Scanner;
 import java.io.File;
+import java.util.Collections;
 
 import model.Contact;
 
@@ -77,41 +78,35 @@ public class App {
             for (Contact contact : list) {
                 if(nm.equals(contact.getNom()) || nm.equals(contact.getPrenom()) || nm.equals(contact.getPrenom() + " " + contact.getNom())){
                     System.out.println("Vous avez choisi " + contact.getPrenom() + " " + contact.getNom());
-                    System.out.println("Quel élément voulez-vous modifier?");
-                    System.out.println("-Nom- -Prenom- -Mail- -Telephone- -Date-");
-                    String ch = _scan.nextLine();
-                    switch (ch) {
-                        case "Nom":
-                            System.out.println("Veuillez saisir le nouveau Nom: ");
-                            String cho = _scan.nextLine();
-                            contact.setNom(cho);
-                            break;
-                        case "Prenom":
-                            System.out.println("Veuillez saisir le nouveau prénom: ");
-                            String cho1 = _scan.nextLine();
-                            contact.setPrenom(cho1);
-                            break;
-                        case "Mail":
-                            System.out.println("Veuillez saisir la nouvelle adresse-email: ");
-                            String cho2 = _scan.nextLine();
-                            contact.setMail(cho2);
-                            break;
-                        case "Telephone":
-                            System.out.println("Veuillez saisir le nouveau numéro de téléphone: ");
-                            String cho3 = _scan.nextLine();
-                            contact.setTelephone(cho3);
-                            break;
-                        case "Date":
-                            System.out.println("Veuillez saisir la nouvelle date de naissance: ");
-                            String cho4 = _scan.nextLine();
-                            contact.setDateNaissance(cho4);
-                            break;
-                        default:
-                            System.out.println("Veuillez choisir une option valide.");
-                            break;
+                    System.out.println("Veuillez saisir le nouveau Nom: ");
+                    String cho = _scan.nextLine();
+                    if(!cho.equals("")){
+                        contact.setNom(cho); 
+                    }
+                    System.out.println("Veuillez saisir le nouveau prénom: ");
+                    String cho1 = _scan.nextLine();
+                    if(!cho1.equals("")){
+                        contact.setPrenom(cho1); 
+                    }                
+                    System.out.println("Veuillez saisir la nouvelle adresse-email: ");
+                    String cho2 = _scan.nextLine();
+                    if(!cho2.equals("")){
+                        contact.setMail(cho2);
+                    }
+                    System.out.println("Veuillez saisir le nouveau numéro de téléphone: ");
+                    String cho3 = _scan.nextLine();
+                    if(!cho3.equals("")){
+                        contact.setTelephone(cho3);                
+                    }
+                    System.out.println("Veuillez saisir la nouvelle date de naissance: ");
+                    String cho4 = _scan.nextLine();
+                    if(!cho4.equals("")){
+                        contact.setDateNaissance(cho4);
+                    }
+                    break;
+                        
                     }
                 }
-            }
             File file = new File("contacts.csv");
     
             file.delete();
@@ -132,6 +127,14 @@ public class App {
     private static void listerContacts() {
         try {
             ArrayList<Contact> list = Contact.lister();
+            ArrayList<String> namesList = new ArrayList<String>();
+
+            for (Contact contact : list) {
+                namesList.add((contact.getNom() + " " + contact.getPrenom()));
+            }
+
+            Collections.sort(namesList);
+            System.out.println(namesList);
             for (Contact contact : list) {
                 System.out.println(contact.getNom() + " " + contact.getPrenom());
             }
