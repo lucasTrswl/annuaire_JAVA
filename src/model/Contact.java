@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -81,6 +82,12 @@ public class Contact {
     public void setDateNaissance(String dateNaissance) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         this.dateNaissance = format.parse(dateNaissance);
+    }
+
+    class DateOfBirthComparator implements Comparator<Contact> {
+        public int compare(Contact c1, Contact c2) {
+            return c1.getDateNaissance().compareTo(c2.getDateNaissance());
+        }
     }
 
     public void enregistrer() throws IOException {
