@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="annuaire_JAVA:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/annuaire_JAVA_jar</output-path>
+    <root id="archive" name="annuaire_JAVA.jar">
+      <element id="module-output" name="annuaire_JAVA" />
+    </root>
+  </artifact>
+</component>
