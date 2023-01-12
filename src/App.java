@@ -2,9 +2,13 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.List;
 import java.util.Scanner;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.Collections;
+import java.util.Comparator;
 
 import model.Contact;
 
@@ -30,6 +34,8 @@ public class App {
                 case "4":
                     supprimerContact();
                     break;
+                case "5":
+                    sortByEmail();
                 case "q":
                     return;
                 default:
@@ -60,7 +66,7 @@ public class App {
             File file = new File("contacts.csv");
         
             file.delete();
-            file.createNewFile();
+            file.createNewFile(); 
             for (Contact contact : list) {
                 contact.supprimer(file);
 
@@ -71,7 +77,7 @@ public class App {
     }
 
     private static void modifierContact() {
-        System.out.println("Saisirrrrrrrrr le nom du contact que vous souhaitez modifier: ");
+        System.out.println("Saisir le nom du contact que vous souhaitez modifier: ");
         String nm = _scan.nextLine();
         try {
             ArrayList<Contact> list = Contact.lister();
@@ -127,6 +133,9 @@ public class App {
     private static void listerContacts() {
         try {
             ArrayList<Contact> list = Contact.lister();
+
+
+            
             ArrayList<String> namesList = new ArrayList<String>();
 
             for (Contact contact : list) {
@@ -194,9 +203,57 @@ public class App {
         menus.add("2- Lister les contacts");
         menus.add("3- Modifier un contact");
         menus.add("4- Supprimer un contact");
+        menus.add("5 - Afficher la liste de contacts triée par email");
         menus.add("q- Quitter");
         for (String menu : menus) {
             System.out.println(menu);
         }
     }
+
+
+
+
+
+    /**
+     * @param args
+     */
+    public static void sortByEmail() {
+        // Chemin du fichier CSV contenant les contacts
+        String filePath = "contacts.csv";
+        
+        // Liste pour stocker les objets Contact lus à partir du fichier CSV
+        List<Contact> contacts = new ArrayList<>();
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            // Lire chaque ligne du fichier
+            String list;
+            while ((list = br.readLine()) != null) {
+                // Séparer les données de chaque ligne en utilisant la virgule comme séparateur
+                String[] data = list.split(";");
+                String nom = data[0];
+                String prenom = data[1];
+                String mail = data[2];
+                String telephone = data[3];
+                String dateNaissance = data[4];
+
+
+
+                // Ajouter un nouvel objet Contact à la liste avec les données lues
+                contacts.add(new Contact());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        // Trier la liste de contacts par email
+        Collections.sort(contacts, (c1, c2) -> c1.getMail().compareTo(c2.getMail()));
+        
+        // Afficher la liste triée
+        for (Contact contact : contacts) {
+            System.out.println(contact);
+        }
+    }
 }
+
+
+    
