@@ -14,46 +14,41 @@ import model.Contact;
 import model.DateComparator;
 import model.Date;
 import model.ComparableName;
-import java.util.List;
 
 public class App {
 
     private static Scanner _scan = new Scanner(System.in);
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args){
 
         while (true) {
             afficherMenu();
             String choix = _scan.nextLine();
-            switch (choix) {
-                case "1":
-                    try {
+            try{
+                switch (choix) {
+                    case "1":
                         ajouterContact();
-                    } catch (IOException e1) {
-                        System.out.println("Une erreur est survenue lors de l'ajout du contact.");        
-                        e1.printStackTrace();
-                    }
-                    break;
-                case "2":
-                    try {
+                        break;
+                    case "2":
                         listerContacts();
-                    } catch (IOException | ParseException e) {
-                        System.out.println("Une erreur est survenue lors de l'obtention des contacts.");        
-                        e.printStackTrace();
-                    }
-                    break;
-                case "3":
-                    modifierContact();
-                    break;
-                case "4":
-                    supprimerContact();
-                    break;
-                case "q":
-                    return;
-                default:
-                    System.out.println("Boulet !!!");
-                    break;
+                        break;
+                    case "3":
+                        modifierContact();
+                        break;
+                    case "4":
+                        supprimerContact();
+                        break;
+                    case "q":
+                        return;
+                    default:
+                        System.out.println("Boulet !!!");
+                        break;
+                }
+            } catch (IOException | ParseException e){
+                System.out.println("Une erreur est survenue lors de l'obtention des contacts.");
+                e.printStackTrace();
             }
+            
         }
     }
 
@@ -206,10 +201,8 @@ public class App {
         }
     }
 
-    public static void emailSorting() {
+    public static void emailSorting() throws IOException, ParseException {
         // Liste pour stocker les objets Contact lus à partir du fichier CSV
-        try {
-
             List<Contact> listeContacts = Contact.lister();
             Collections.sort(listeContacts, (c1, c2) -> c1.getMail().compareTo(c2.getMail()));
     
@@ -217,10 +210,6 @@ public class App {
             for (Contact contact : listeContacts) {
                 System.out.println(contact.toString());
             }
-
-        } catch (Exception e) {
-            System.out.println("impossible de recuperer la liste des contacts");
-        }
     }
 
     private static void dateSorting() throws IOException, ParseException{
