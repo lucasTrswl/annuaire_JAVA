@@ -344,57 +344,8 @@ public class App {
             System.out.println(menu);
         }
     }
-
-
-
-
-
-    /**
-     * @param args
-     */
-    public static void sortByEmail() {
-        // Chemin du fichier CSV contenant les contacts
-        String filePath = "contacts.csv";
-        
-        // Liste pour stocker les objets Contact lus à partir du fichier CSV
-        List<Contact> contacts = new ArrayList<>();
-        
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            // Lire chaque ligne du fichier
-            String list;
-            while ((list = br.readLine()) != null) {
-                // Séparer les données de chaque ligne en utilisant la virgule comme séparateur
-                String[] data = list.split(";");
-                String nom = data[0];
-                String prenom = data[1];
-                String mail = data[2];
-                String telephone = data[3];
-                String dateNaissance = data[4];
-
-
-
-                // Ajouter un nouvel objet Contact à la liste avec les données lues
-                contacts.add(new Contact());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        // Trier la liste de contacts par email
-        Collections.sort(contacts, (c1, c2) -> c1.getMail().compareTo(c2.getMail()));
-        
-        // Afficher la liste triée
-        for (Contact contact : contacts) {
-            System.out.println(contact);
-        }
-    }
-
-    
-
-
-
-    
 }
+
 
 
     
