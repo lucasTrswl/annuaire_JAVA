@@ -45,9 +45,21 @@ public class Date {
         Jour = jour;
     }
 
+    public int countDig(int n)  {  
+        int count = 0;  
+        while(n != 0)  
+        {  
+        n = n / 10;  
+        count = count + 1;  
+        }  
+        return count;  
+    }  
 
     @Override
     public String toString() {
-      return "Né le " + Jour + "/" + Mois + "/" + Annee;
+        if(countDig(Jour) <= 1 || countDig(Mois) <= 1){
+            return "Né le 0" + Jour + "/0" + Mois + "/" + Annee;
+        }
+        return "Né le " + Jour + "/" + Mois + "/" + Annee;
     }
   }

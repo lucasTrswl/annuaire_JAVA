@@ -48,8 +48,6 @@ public class App {
                 case "4":
                     supprimerContact();
                     break;
-                case "5":
-                    sortByEmail();
                 case "q":
                     return;
                 default:
@@ -304,7 +302,6 @@ public class App {
         menus.add("2- Lister les contacts");
         menus.add("3- Modifier un contact");
         menus.add("4- Supprimer un contact");
-        menus.add("5 - Afficher la liste de contacts triée par email");
         menus.add("q- Quitter");
         for (String menu : menus) {
             System.out.println(menu);
