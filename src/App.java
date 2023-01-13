@@ -2,11 +2,17 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.List;
 import java.util.Scanner;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.Collections;
+import java.util.Comparator;
 
 import model.Contact;
+import model.DateComparator;
+import model.Date;
 import model.ComparableName;
 import java.util.List;
 
@@ -42,6 +48,8 @@ public class App {
                 case "4":
                     supprimerContact();
                     break;
+                case "5":
+                    sortByEmail();
                 case "q":
                     return;
                 default:
@@ -50,7 +58,6 @@ public class App {
             }
         }
     }
-
 
     private static void supprimerContact() {
         ArrayList<Contact> list;
@@ -72,7 +79,7 @@ public class App {
             File file = new File("contacts.csv");
         
             file.delete();
-            file.createNewFile();
+            file.createNewFile(); 
             for (Contact contact : list) {
                 contact.supprimer(file);
 
@@ -151,6 +158,9 @@ public class App {
                         nameSorting();
                     case "Emails":
                         emailSorting();
+                    case "Dates":
+                        dateSorting();
+                    
                 }
                 break;
             case "n":
@@ -174,6 +184,7 @@ public class App {
 
         }
     }
+    
 
     private static void normalSorting() throws IOException, ParseException{
             ArrayList<Contact> list = Contact.lister();
@@ -212,6 +223,37 @@ public class App {
         } catch (Exception e) {
             System.out.println("impossible de recuperer la liste des contacts");
         }
+    }
+
+    private static void dateSorting() throws IOException, ParseException{
+        ArrayList<Contact> list = Contact.lister();
+        ArrayList<Date> comparableDates = new ArrayList<>();
+        
+        for (Contact contact : list) {
+            ArrayList<Integer> dateNumbers = dateSeparator(contact.getDateNaissance());
+            comparableDates.add(new Date(dateNumbers.get(0), dateNumbers.get(1), dateNumbers.get(2)));
+        }
+
+        Collections.sort(comparableDates, new DateComparator());
+
+        for (Date date : comparableDates) {
+            System.out.println(date);
+        }
+    }
+
+    private static ArrayList<Integer> dateSeparator(String date){
+        String split[] = date.split("/");
+        String a = split[2];
+        String m = split[1];
+        String j = split[0];
+        int annee = Integer.parseInt(a);
+        int mois = Integer.parseInt(m);
+        int jour = Integer.parseInt(j);
+        ArrayList<Integer> dateInts = new ArrayList<>();
+        dateInts.add(annee);
+        dateInts.add(mois);
+        dateInts.add(jour);
+        return dateInts;
     }
 
     private static void ajouterContact() throws IOException {
@@ -262,9 +304,63 @@ public class App {
         menus.add("2- Lister les contacts");
         menus.add("3- Modifier un contact");
         menus.add("4- Supprimer un contact");
+        menus.add("5 - Afficher la liste de contacts triée par email");
         menus.add("q- Quitter");
         for (String menu : menus) {
             System.out.println(menu);
         }
     }
+
+
+
+
+
+    /**
+     * @param args
+     */
+    public static void sortByEmail() {
+        // Chemin du fichier CSV contenant les contacts
+        String filePath = "contacts.csv";
+        
+        // Liste pour stocker les objets Contact lus à partir du fichier CSV
+        List<Contact> contacts = new ArrayList<>();
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            // Lire chaque ligne du fichier
+            String list;
+            while ((list = br.readLine()) != null) {
+                // Séparer les données de chaque ligne en utilisant la virgule comme séparateur
+                String[] data = list.split(";");
+                String nom = data[0];
+                String prenom = data[1];
+                String mail = data[2];
+                String telephone = data[3];
+                String dateNaissance = data[4];
+
+
+
+                // Ajouter un nouvel objet Contact à la liste avec les données lues
+                contacts.add(new Contact());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        // Trier la liste de contacts par email
+        Collections.sort(contacts, (c1, c2) -> c1.getMail().compareTo(c2.getMail()));
+        
+        // Afficher la liste triée
+        for (Contact contact : contacts) {
+            System.out.println(contact);
+        }
+    }
+
+    
+
+
+
+    
 }
+
+
+    

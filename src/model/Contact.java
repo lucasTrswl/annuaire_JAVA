@@ -12,7 +12,10 @@ import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,6 +84,12 @@ public class Contact {
         this.dateNaissance = format.parse(dateNaissance);
     }
 
+    class DateOfBirthComparator implements Comparator<Contact> {
+        public int compare(Contact c1, Contact c2) {
+            return c1.getDateNaissance().compareTo(c2.getDateNaissance());
+        }
+    }
+
     public void enregistrer() throws IOException {
         PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("contacts.csv", true)));
         try {
@@ -139,3 +148,6 @@ public class Contact {
         return build.toString();
     }
 }
+
+
+
