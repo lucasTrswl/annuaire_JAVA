@@ -1,9 +1,14 @@
 package model;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+
 public class Date {
     private int Annee;
     private int Mois;
     private int Jour;
+    private String contactName;
   
     public Date(int annee, int mois, int jour) {
       this.Annee = annee;
@@ -15,7 +20,22 @@ public class Date {
         return Annee;
     }
 
+    public String getContactName() {
+        return contactName;
+    }
 
+    public void setContactName() {
+        try {
+            ArrayList<Contact> list = Contact.lister();
+            for (Contact contact : list) {
+                if(contact.getDateNaissance().equals("0" + Jour + "/0" + Mois + "/" + Annee)){
+                    this.contactName = contact.getNom();
+                }
+            }
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void setAnnee(int annee) {
         Annee = annee;
@@ -57,9 +77,10 @@ public class Date {
 
     @Override
     public String toString() {
+        setContactName();
         if(countDig(Jour) <= 1 || countDig(Mois) <= 1){
-            return "Né le 0" + Jour + "/0" + Mois + "/" + Annee;
+            return contactName + " né le 0" + Jour + "/0" + Mois + "/" + Annee;
         }
-        return "Né le " + Jour + "/" + Mois + "/" + Annee;
+        return contactName + " né le " + Jour + "/" + Mois + "/" + Annee;
     }
   }
