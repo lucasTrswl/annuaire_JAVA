@@ -149,10 +149,13 @@ public class App {
                 switch(choix){
                     case "Noms":
                         nameSorting();
+                        break;
                     case "Emails":
                         emailSorting();
+                        break;
                     case "Dates":
                         dateSorting();
+                        break;
                     
                 }
                 break;
@@ -208,7 +211,7 @@ public class App {
     
             // Afficher la liste triée
             for (Contact contact : listeContacts) {
-                System.out.println(contact.toString());
+                System.out.println(contact.getMail());
             }
     }
 
