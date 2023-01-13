@@ -8,6 +8,7 @@ import java.util.Collections;
 
 import model.Contact;
 import model.ComparableName;
+import java.util.List;
 
 public class App {
 
@@ -147,11 +148,13 @@ public class App {
                 String choix = _scan.nextLine();
                 switch(choix){
                     case "Noms":
-                        nameListing();
+                        nameSorting();
+                    case "Emails":
+                        emailSorting();
                 }
                 break;
             case "n":
-                normalListing();
+                normalSorting();
                 break;
         }
 
@@ -172,7 +175,7 @@ public class App {
         }
     }
 
-    private static void normalListing() throws IOException, ParseException{
+    private static void normalSorting() throws IOException, ParseException{
             ArrayList<Contact> list = Contact.lister();
 
             for (Contact contact : list) {
@@ -180,7 +183,7 @@ public class App {
             }
     }
 
-    private static void nameListing() throws IOException, ParseException{
+    private static void nameSorting() throws IOException, ParseException{
         ArrayList<Contact> list = Contact.lister();
         ArrayList<ComparableName> comparableNames = new ArrayList<>();
         
@@ -191,6 +194,23 @@ public class App {
 
         for (ComparableName name : comparableNames) {
             System.out.println(name.getNom() + " " + name.getPrenom());
+        }
+    }
+
+    public static void emailSorting() {
+        // Liste pour stocker les objets Contact lus à partir du fichier CSV
+        try {
+
+            List<Contact> listeContacts = Contact.lister();
+            Collections.sort(listeContacts, (c1, c2) -> c1.getMail().compareTo(c2.getMail()));
+    
+            // Afficher la liste triée
+            for (Contact contact : listeContacts) {
+                System.out.println(contact.toString());
+            }
+
+        } catch (Exception e) {
+            System.out.println("impossible de recuperer la liste des contacts");
         }
     }
 
