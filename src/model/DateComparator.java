@@ -1,7 +1,8 @@
 package model;
 
-import java.util.Comparator;
+import java.util.Comparator; 
 
+// classe qui permet de mettre en place la métohde Comparator
 public class DateComparator implements Comparator<Date> {
     private int Annee;
     private int Mois;
@@ -17,6 +18,7 @@ public class DateComparator implements Comparator<Date> {
         return Annee;
     }
 
+    // Setter pour l'année
 
     public void setAnnee(int annee) {
         Annee = annee;
@@ -28,6 +30,8 @@ public class DateComparator implements Comparator<Date> {
     }
 
 
+        // Setter pour le mois
+
     public void setMois(int mois) {
         Mois = mois;
     }
@@ -37,12 +41,13 @@ public class DateComparator implements Comparator<Date> {
         return Jour;
     }
 
-
+        // Setter pour le jour
     public void setJour(int jour) {
         Jour = jour;
     }
 
 
+     // Méthode pour comparer les dates
     @Override
     public int compare(Date o1, Date o2) {
         int compareAnnee = o1.getAnnee() - o2.getAnnee();
