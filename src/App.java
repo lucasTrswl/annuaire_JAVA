@@ -2,44 +2,39 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.List;
 import java.util.Scanner;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.Collections;
 
 import model.Contact;
-import model.ComparableName;
 
 public class App {
 
     private static Scanner _scan = new Scanner(System.in);
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
 
         while (true) {
             afficherMenu();
             String choix = _scan.nextLine();
             switch (choix) {
                 case "1":
-                    try {
-                        ajouterContact();
-                    } catch (IOException e1) {
-                        System.out.println("Une erreur est survenue lors de l'ajout du contact.");        
-                        e1.printStackTrace();
-                    }
+                    ajouterContact();
                     break;
                 case "2":
-                    try {
-                        listerContacts();
-                    } catch (IOException | ParseException e) {
-                        System.out.println("Une erreur est survenue lors de l'obtention des contacts.");        
-                        e.printStackTrace();
-                    }
+                    listerContacts();
                     break;
                 case "3":
                     modifierContact();
                     break;
                 case "4":
                     supprimerContact();
+                    break;
+                case "5":
+                    sortByEmail();
                     break;
                 case "q":
                     return;
@@ -135,62 +130,25 @@ public class App {
         }
     }
 
-    private static void listerContacts() throws IOException, ParseException {
-        System.out.println("Souhaitez vous trier la liste? (y/n)");
-        String yesno = _scan.nextLine();
-        switch(yesno){
-            case "y":
-                System.out.println("Quelle méthode de tri voulez-vous utiliser?");
-                System.out.println("--Noms--");
-                System.out.println("--Emails--");
-                System.out.println("--Dates--");
-                String choix = _scan.nextLine();
-                switch(choix){
-                    case "Noms":
-                        nameListing();
-                }
-                break;
-            case "n":
-                normalListing();
-                break;
-        }
-
-
-        System.out.println("Souhaitez vous rechercher un contact en particulier? (y/n)");
-        String yesno2 = _scan.nextLine();
-        switch(yesno2){
-            case "y":
-                System.out.println("Entrez le nom du contact à rechercher");
-                String nom = _scan.nextLine();
-                ArrayList<Contact> list = Contact.lister();
-                for (Contact contact : list) {
-                    if(nom.equals(contact.getNom()) || nom.equals(contact.getPrenom()) || nom.equals(contact.getPrenom() + " " + contact.getNom())){
-                        System.out.println(contact.getNom() + " " + contact.getPrenom());
-                    }
-                }
-
-        }
-    }
-
-    private static void normalListing() throws IOException, ParseException{
+    private static void listerContacts() {
+        try {
             ArrayList<Contact> list = Contact.lister();
+            ArrayList<String> namesList = new ArrayList<String>();
 
+            for (Contact contact : list) {
+                namesList.add((contact.getNom() + " " + contact.getPrenom()));
+            }
+
+            Collections.sort(namesList);
+            System.out.println(namesList);
             for (Contact contact : list) {
                 System.out.println(contact.getNom() + " " + contact.getPrenom());
             }
-    }
-
-    private static void nameListing() throws IOException, ParseException{
-        ArrayList<Contact> list = Contact.lister();
-        ArrayList<ComparableName> comparableNames = new ArrayList<>();
-        
-        for (Contact contact : list) {
-            comparableNames.add(new ComparableName(contact.getNom(), contact.getPrenom()));
-        }
-        Collections.sort(comparableNames);
-
-        for (ComparableName name : comparableNames) {
-            System.out.println(name.getNom() + " " + name.getPrenom());
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Une erreur est survenue lors de l'obtention des contacts.");        
+        } catch (ParseException e2) {
+            System.out.println("Une erreur est survenue lors de l'obtention des contacts");
         }
     }
 
@@ -242,9 +200,27 @@ public class App {
         menus.add("2- Lister les contacts");
         menus.add("3- Modifier un contact");
         menus.add("4- Supprimer un contact");
+        menus.add("5- Afficher la liste de contact trie par mail");
         menus.add("q- Quitter");
         for (String menu : menus) {
             System.out.println(menu);
+        }
+    }
+
+    public static void sortByEmail() {
+        // Liste pour stocker les objets Contact lus à partir du fichier CSV
+        try {
+
+            List<Contact> listeContacts = Contact.lister();
+            Collections.sort(listeContacts, (c1, c2) -> c1.getMail().compareTo(c2.getMail()));
+    
+            // Afficher la liste triée
+            for (Contact contact : listeContacts) {
+                System.out.println(contact.toString());
+            }
+
+        } catch (Exception e) {
+            System.out.println("impossible de recuperer la liste des contacts");
         }
     }
 }
